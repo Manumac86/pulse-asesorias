@@ -1,4 +1,6 @@
-# Pulse — Dashboard de Red de Asesorías
+# Pulse
+
+## Dashboard de Red de Asesorías
 
 Sistema interno para monitorizar la red de asesorías fiscales y contables de Asevia. Permite ver de un vistazo cómo va cada asesoría y la red en su conjunto.
 
@@ -15,7 +17,9 @@ Sistema interno para monitorizar la red de asesorías fiscales y contables de As
 docker compose up
 ```
 
-Abre http://localhost:3000. Listo — Postgres, backend y frontend se levantan solos, las migraciones se aplican y los datos se cargan automáticamente.
+- Abre http://localhost:3000.
+
+- Postgres, backend y frontend se levantan solos, las migraciones se aplican y los datos se cargan automáticamente.
 
 ### Sin Docker (desarrollo)
 
@@ -81,14 +85,14 @@ pulse/
 
 ## API
 
-| Endpoint | Descripción |
-|----------|-------------|
-| `GET /health` | Health check |
-| `GET /api/asesorias?search=&provincia=&especialidad=&page=&limit=` | Listado con filtros y paginación |
-| `GET /api/asesorias/:id` | Detalle de una asesoría |
-| `GET /api/asesorias/:id/metricas?from=&to=` | Métricas mensuales (rango opcional YYYY-MM) |
-| `GET /api/red/metricas?from=&to=` | Métricas agregadas de red + ranking top/bottom 5 |
-| `POST /api/asesorias/:id/soporte/query` | Pregunta RAG sobre documentos de soporte (Fase 2) |
+| Endpoint                                                           | Descripción                                       |
+| ------------------------------------------------------------------ | ------------------------------------------------- |
+| `GET /health`                                                      | Health check                                      |
+| `GET /api/asesorias?search=&provincia=&especialidad=&page=&limit=` | Listado con filtros y paginación                  |
+| `GET /api/asesorias/:id`                                           | Detalle de una asesoría                           |
+| `GET /api/asesorias/:id/metricas?from=&to=`                        | Métricas mensuales (rango opcional YYYY-MM)       |
+| `GET /api/red/metricas?from=&to=`                                  | Métricas agregadas de red + ranking top/bottom 5  |
+| `POST /api/asesorias/:id/soporte/query`                            | Pregunta RAG sobre documentos de soporte (Fase 2) |
 
 En `postman/Pulse-API.postman_collection.json` hay una colección de Postman lista para importar con todos los endpoints, parámetros y ejemplos.
 
@@ -96,11 +100,11 @@ En `postman/Pulse-API.postman_collection.json` hay una colección de Postman lis
 
 De las 16 métricas disponibles, muestro 6 agrupadas en 3 ejes:
 
-| Eje | Métricas | Por qué |
-|-----|----------|---------|
-| **Salud del negocio** | Clientes activos, Facturación total | Los dos KPIs que responden "¿crece o decrece?". Si clientes suben pero facturación baja → problema de pricing. |
-| **Capacidad operativa** | Declaraciones totales, Tasa de resolución | Declaraciones = carga de trabajo real. Tasa de resolución = ¿el equipo está desbordado? Más útil que consultas en bruto. |
-| **Calidad** | Satisfacción cliente, Incidencias AEAT | Satisfacción = voz del cliente. Incidencias AEAT = riesgo regulatorio. Una asesoría con muchas incidencias es un problema serio. |
+| Eje                     | Métricas                                  | Por qué                                                                                                                          |
+| ----------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Salud del negocio**   | Clientes activos, Facturación total       | Los dos KPIs que responden "¿crece o decrece?". Si clientes suben pero facturación baja → problema de pricing.                   |
+| **Capacidad operativa** | Declaraciones totales, Tasa de resolución | Declaraciones = carga de trabajo real. Tasa de resolución = ¿el equipo está desbordado? Más útil que consultas en bruto.         |
+| **Calidad**             | Satisfacción cliente, Incidencias AEAT    | Satisfacción = voz del cliente. Incidencias AEAT = riesgo regulatorio. Una asesoría con muchas incidencias es un problema serio. |
 
 **Descartadas para la vista principal**: `horas_trabajadas` (sin capacidad máxima, el número no dice nada), `documentos_procesados` (correlaciona con declaraciones), desglose de facturación (ruido para la vista general).
 
@@ -139,7 +143,7 @@ De las 16 métricas disponibles, muestro 6 agrupadas en 3 ejes:
 
 ### Setup
 
-Exportar `OPENAI_API_KEY` antes de levantar Docker Compose:
+Agregar `OPENAI_API_KEY` al `.env` o exportarla antes de levantar Docker Compose:
 
 ```bash
 export OPENAI_API_KEY=sk-...
@@ -151,7 +155,6 @@ El seed genera los embeddings automáticamente al detectar la variable. Sin API 
 Para desarrollo local (sin Docker), añadir la variable al `.env` del backend:
 
 ```bash
-echo 'OPENAI_API_KEY=sk-...' >> backend/.env
 cd backend && pnpm exec prisma db seed
 ```
 
@@ -195,11 +198,11 @@ Si se elimina: soft-delete (`deleted_at`). Las fuentes citadas en respuestas his
 
 ### 6. ¿Qué coste y complejidad tiene tu solución?
 
-| Componente | Coste | Complejidad |
-|------------|-------|-------------|
-| pgvector | Gratis (extensión Postgres) | Mínima — misma BD |
-| Embeddings (text-embedding-3-small) | ~$0.001 para 330 docs | Una llamada API en el seed |
-| LLM (gpt-4o-mini) | ~$0.15/millón input tokens | Un servicio nuevo, aislado |
-| **Total por query** | **~$0.001** | |
+| Componente                          | Coste                       | Complejidad                |
+| ----------------------------------- | --------------------------- | -------------------------- |
+| pgvector                            | Gratis (extensión Postgres) | Mínima — misma BD          |
+| Embeddings (text-embedding-3-small) | ~$0.001 para 330 docs       | Una llamada API en el seed |
+| LLM (gpt-4o-mini)                   | ~$0.15/millón input tokens  | Un servicio nuevo, aislado |
+| **Total por query**                 | **~$0.001**                 |                            |
 
 Dependencia externa: API de OpenAI. Si cae, el chat devuelve 503 pero Pulse (dashboard + métricas) sigue 100% operativo.
