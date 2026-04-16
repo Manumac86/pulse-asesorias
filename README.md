@@ -114,6 +114,7 @@ De las 16 métricas disponibles, muestro 6 agrupadas en 3 ejes:
 
 ### 1. ¿Qué dejaste fuera por falta de tiempo?
 
+- **Más Documentación**: Normalmente dedico mucho tiempo a documentar claramente el repositorio, hacer una guía de usuario mínima y una documentación técnica que ayude a otros developers en un onboarding.
 - **Autenticación**: Pulse es interno, pero en producción necesitaría auth (NextAuth + roles). Lo dejaría preparado con un middleware de JWT.
 - **Cache**: Redis para las métricas agregadas de red (cambian 1 vez/mes). Con 50 asesorías y 600 filas no es necesario.
 - **Export CSV/PDF**: Funcionalidad obvia para gestores que quieren compartir datos.
