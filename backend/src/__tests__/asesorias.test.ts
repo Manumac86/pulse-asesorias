@@ -66,9 +66,7 @@ describe('GET /api/asesorias', () => {
   });
 
   it('combina filtros provincia + especialidad', async () => {
-    const res = await request(app).get(
-      '/api/asesorias?provincia=Madrid&especialidad=Fiscal',
-    );
+    const res = await request(app).get('/api/asesorias?provincia=Madrid&especialidad=Fiscal');
 
     expect(res.status).toBe(200);
     res.body.data.forEach((a: any) => {
@@ -140,9 +138,7 @@ describe('GET /api/asesorias/:id/metricas', () => {
   });
 
   it('filtra por rango de fechas', async () => {
-    const res = await request(app).get(
-      '/api/asesorias/1/metricas?from=2025-06&to=2025-08',
-    );
+    const res = await request(app).get('/api/asesorias/1/metricas?from=2025-06&to=2025-08');
 
     expect(res.status).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);

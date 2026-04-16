@@ -23,14 +23,25 @@ interface MetricChartProps {
 // Formatea "2025-04-01T00:00:00.000Z" → "Abr 25"
 function formatMonth(periodo: string): string {
   const date = new Date(periodo);
-  const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-                  'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+  const months = [
+    'Ene',
+    'Feb',
+    'Mar',
+    'Abr',
+    'May',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dic',
+  ];
   return `${months[date.getUTCMonth()]} ${String(date.getUTCFullYear()).slice(2)}`;
 }
 
 // Formateador por defecto: numero con separador de miles
-const defaultFormat = (v: number) =>
-  v.toLocaleString('es-ES', { maximumFractionDigits: 2 });
+const defaultFormat = (v: number) => v.toLocaleString('es-ES', { maximumFractionDigits: 2 });
 
 export function MetricChart({
   title,
@@ -56,11 +67,7 @@ export function MetricChart({
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-              <XAxis
-                dataKey="name"
-                tick={{ fontSize: 11 }}
-                className="text-muted-foreground"
-              />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} className="text-muted-foreground" />
               <YAxis
                 tick={{ fontSize: 11 }}
                 width={60}

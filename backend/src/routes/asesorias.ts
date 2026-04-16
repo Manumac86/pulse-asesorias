@@ -193,7 +193,7 @@ asesoriasRouter.post('/:id/soporte/query', async (req, res, next) => {
     const result = await queryRag(id, pregunta.trim());
     res.json(result);
   } catch (error) {
-    if (error instanceof Error && (error.message === 'Asesoría no encontrada')) {
+    if (error instanceof Error && error.message === 'Asesoría no encontrada') {
       res.status(404).json({ error: error.message });
       return;
     }

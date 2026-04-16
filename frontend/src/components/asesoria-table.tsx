@@ -57,10 +57,7 @@ export function AsesoriaTable({ asesorias }: AsesoriaTableProps) {
                 <TableCell>{a.ciudad}</TableCell>
                 <TableCell className="text-center">{a.numEmpleados}</TableCell>
                 <TableCell>
-                  <Badge
-                    variant="secondary"
-                    className={especialidadColor[a.especialidad] || ''}
-                  >
+                  <Badge variant="secondary" className={especialidadColor[a.especialidad] || ''}>
                     {a.especialidad}
                   </Badge>
                 </TableCell>

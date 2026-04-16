@@ -41,7 +41,9 @@ async function seedAsesorias() {
     // Validar que la especialidad es un valor valido del enum
     const especialidad = row.especialidad as Especialidad;
     if (!Object.values(Especialidad).includes(especialidad)) {
-      console.warn(`Especialidad desconocida: ${row.especialidad}, saltando asesoria ${row.nombre}`);
+      console.warn(
+        `Especialidad desconocida: ${row.especialidad}, saltando asesoria ${row.nombre}`,
+      );
       continue;
     }
 

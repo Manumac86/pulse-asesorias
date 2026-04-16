@@ -49,20 +49,13 @@ app.use('/api/red', redRouter);
 // Cualquier error que se lance en un route handler llega aqui.
 // Sin esto, Express devuelve un HTML feo con el stack trace.
 
-app.use(
-  (
-    err: Error,
-    _req: express.Request,
-    res: express.Response,
-    _next: express.NextFunction,
-  ) => {
-    console.error('Unhandled error:', err.message);
-    res.status(500).json({
-      error: 'Error interno del servidor',
-      ...(process.env.NODE_ENV !== 'production' && { detail: err.message }),
-    });
-  },
-);
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error('Unhandled error:', err.message);
+  res.status(500).json({
+    error: 'Error interno del servidor',
+    ...(process.env.NODE_ENV !== 'production' && { detail: err.message }),
+  });
+});
 
 // ---------------------------------------------------------------------------
 // Start

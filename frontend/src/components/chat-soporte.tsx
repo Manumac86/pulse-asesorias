@@ -95,9 +95,7 @@ export function ChatSoporte({ asesoriaId }: ChatSoporteProps) {
             >
               <div
                 className={`max-w-[85%] rounded-lg px-4 py-2.5 text-sm ${
-                  msg.role === 'user'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted'
+                  msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
                 }`}
               >
                 <p className="whitespace-pre-wrap">{msg.content}</p>

@@ -16,28 +16,22 @@ import { asesoriasRouter } from '../routes/asesorias';
 const app = express();
 app.use(express.json());
 app.use('/api/asesorias', asesoriasRouter);
-app.use(
-  (err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    res.status(500).json({ error: err.message });
-  },
-);
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  res.status(500).json({ error: err.message });
+});
 
 describe('POST /api/asesorias/:id/soporte/query', () => {
   it('devuelve 400 si no se envia pregunta', async () => {
     // POR QUE: Enviar una pregunta vacia al LLM desperdicia tokens (~$0.001)
     // y devuelve una respuesta sin sentido. Mejor validar antes.
-    const res = await request(app)
-      .post('/api/asesorias/1/soporte/query')
-      .send({});
+    const res = await request(app).post('/api/asesorias/1/soporte/query').send({});
 
     expect(res.status).toBe(400);
     expect(res.body.error).toContain('obligatoria');
   });
 
   it('devuelve 400 si la pregunta esta vacia', async () => {
-    const res = await request(app)
-      .post('/api/asesorias/1/soporte/query')
-      .send({ pregunta: '   ' });
+    const res = await request(app).post('/api/asesorias/1/soporte/query').send({ pregunta: '   ' });
 
     expect(res.status).toBe(400);
   });

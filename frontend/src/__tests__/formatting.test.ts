@@ -25,8 +25,18 @@ const formatAxis = (v: number): string => {
 function formatMonth(periodo: string): string {
   const date = new Date(periodo);
   const months = [
-    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
+    'Ene',
+    'Feb',
+    'Mar',
+    'Abr',
+    'May',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dic',
   ];
   return `${months[date.getUTCMonth()]} ${String(date.getUTCFullYear()).slice(2)}`;
 }

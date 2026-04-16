@@ -133,11 +133,7 @@ export default function RedPage() {
 
       {/* Rankings */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <GrowthRanking
-          title="Mayor crecimiento en facturación"
-          items={data.topGrowth}
-          type="top"
-        />
+        <GrowthRanking title="Mayor crecimiento en facturación" items={data.topGrowth} type="top" />
         <GrowthRanking
           title="Menor crecimiento en facturación"
           items={data.bottomGrowth}

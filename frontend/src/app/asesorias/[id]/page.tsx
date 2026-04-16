@@ -78,11 +78,9 @@ export default function AsesoriaDetailPage() {
   const formatEur = (v: number) =>
     v.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
 
-  const formatPct = (v: number) =>
-    `${(v * 100).toFixed(1)}%`;
+  const formatPct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
-  const formatDecimal = (v: number) =>
-    v.toFixed(2);
+  const formatDecimal = (v: number) => v.toFixed(2);
 
   return (
     <div className="space-y-6">
@@ -101,10 +99,7 @@ export default function AsesoriaDetailPage() {
               <CardTitle className="text-xl">{asesoria.nombre}</CardTitle>
               <p className="mt-1 text-sm text-muted-foreground">CIF: {asesoria.cif}</p>
             </div>
-            <Badge
-              variant="secondary"
-              className={especialidadColor[asesoria.especialidad] || ''}
-            >
+            <Badge variant="secondary" className={especialidadColor[asesoria.especialidad] || ''}>
               {asesoria.especialidad}
             </Badge>
           </div>
