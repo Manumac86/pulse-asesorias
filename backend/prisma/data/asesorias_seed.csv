@@ -1,0 +1,51 @@
+id,nombre,cif,provincia,ciudad,fecha_alta,num_empleados,especialidad
+1,Gestoria Martínez & Asociados,B28456789,Madrid,Madrid,2018-03-15,12,Fiscal
+2,Asesoría Puente Real,B41234567,Sevilla,Sevilla,2015-07-01,8,Contable
+3,Gabinete Fiscal Mediterráneo,B46345678,Valencia,Valencia,2019-01-20,6,Fiscal
+4,Consultores Díaz-Navarro,B08567890,Barcelona,Barcelona,2016-11-10,15,Laboral
+5,Asesoría López & Ruiz,B29678901,Málaga,Málaga,2020-02-14,5,Fiscal
+6,Gestiones Castellanas,B47789012,Valladolid,Valladolid,2017-06-22,7,Contable
+7,Asesoría Fiscal del Norte,B48890123,Vizcaya,Bilbao,2014-09-05,10,Fiscal
+8,Gabinete Tributario Levante,B03901234,Alicante,Alicante,2021-04-18,4,Fiscal
+9,Asesoría Ramos Hermanos,B30012345,Murcia,Murcia,2018-08-30,6,Laboral
+10,Gestoria Navarra Central,B31123456,Navarra,Pamplona,2016-01-12,9,Contable
+11,Consulting Ibérica Sur,B11234567,Cádiz,Cádiz,2019-05-25,5,Fiscal
+12,Asesoría Financiera Atlántico,B15345678,A Coruña,A Coruña,2017-10-08,8,Contable
+13,Gabinete Torres & Vega,B50456789,Zaragoza,Zaragoza,2020-07-14,7,Fiscal
+14,Asesoría Canarias Gestión,B35567890,Las Palmas,Las Palmas de Gran Canaria,2015-03-22,11,Laboral
+15,Gestoria El Pilar,B50678901,Zaragoza,Zaragoza,2018-12-01,4,Contable
+16,Asesoría Costa del Sol,B29789012,Málaga,Marbella,2021-01-10,6,Fiscal
+17,Bufete Fiscal Aragonés,B22890123,Huesca,Huesca,2016-04-28,3,Fiscal
+18,Gestiones La Mancha,B13901234,Ciudad Real,Ciudad Real,2019-09-15,5,Contable
+19,Asesoría Balear Gestión,B07012345,Baleares,Palma,2017-02-19,9,Laboral
+20,Consulting Extremeño,B06123456,Badajoz,Badajoz,2020-11-03,4,Fiscal
+21,Asesoría Rioja Fiscal,B26234567,La Rioja,Logroño,2015-08-17,6,Fiscal
+22,Gabinete Astur Contable,B33345678,Asturias,Oviedo,2018-05-09,7,Contable
+23,Gestoria Cantábrica,B39456789,Cantabria,Santander,2016-07-21,5,Laboral
+24,Asesoría García-Moreno,B28567890,Madrid,Alcobendas,2019-03-11,13,Fiscal
+25,Fiscal & Legal Pontevedra,B36678901,Pontevedra,Vigo,2017-12-04,8,Fiscal
+26,Asesoría Donosti Gestión,B20789012,Guipúzcoa,San Sebastián,2021-06-30,6,Contable
+27,Gestoria Manchega Integral,B02890123,Albacete,Albacete,2014-11-25,4,Laboral
+28,Consulting Fiscal Granadino,B18901234,Granada,Granada,2020-04-07,7,Fiscal
+29,Asesoría Salamanca Centro,B37012345,Salamanca,Salamanca,2016-09-13,5,Contable
+30,Gabinete León & Partners,B24123456,León,León,2018-01-28,6,Fiscal
+31,Asesoría Tarragona Fiscal,B43234567,Tarragona,Tarragona,2019-07-16,4,Fiscal
+32,Gestiones Cordobesas,B14345678,Córdoba,Córdoba,2015-12-09,8,Laboral
+33,Asesoría Cáceres Integral,B10456789,Cáceres,Cáceres,2020-08-22,3,Contable
+34,Gabinete Fiscal Tinerfeño,B38567890,Santa Cruz de Tenerife,Santa Cruz de Tenerife,2017-04-15,10,Fiscal
+35,Asesoría Burgos & Asociados,B09678901,Burgos,Burgos,2018-10-02,5,Contable
+36,Consulting Toledo Gestión,B45789012,Toledo,Toledo,2021-02-27,4,Fiscal
+37,Asesoría Huelva Sur,B21890123,Huelva,Huelva,2016-06-18,6,Laboral
+38,Gestoria Girona Fiscal,B17901234,Girona,Girona,2019-11-08,7,Fiscal
+39,Asesoría Lleida Contable,B25012345,Lleida,Lleida,2015-05-14,4,Contable
+40,Gabinete Jaén & Morales,B23123456,Jaén,Jaén,2020-09-30,5,Fiscal
+41,Asesoría Almería Integral,B04234567,Almería,Almería,2017-08-12,6,Laboral
+42,Gestiones Segovia Centro,B40345678,Segovia,Segovia,2018-02-05,3,Contable
+43,Consulting Ávila Fiscal,B05456789,Ávila,Ávila,2016-12-20,4,Fiscal
+44,Asesoría Lugo Norte,B27567890,Lugo,Lugo,2021-03-16,5,Contable
+45,Gabinete Ourense Gestión,B32678901,Ourense,Ourense,2019-06-24,4,Fiscal
+46,Asesoría Teruel & Asociados,B44789012,Teruel,Teruel,2015-10-31,3,Laboral
+47,Gestoria Cuenca Fiscal,B16890123,Cuenca,Cuenca,2020-01-19,4,Fiscal
+48,Asesoría Soria Integral,B42901234,Soria,Soria,2017-07-07,3,Contable
+49,Consulting Zamora Gestión,B49012345,Zamora,Zamora,2018-09-14,4,Fiscal
+50,Asesoría Palencia Centro,B34123456,Palencia,Palencia,2019-12-28,5,Contable

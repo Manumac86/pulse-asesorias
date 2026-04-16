@@ -1,0 +1,57 @@
+services:
+  # ---- Base de datos ----
+  # PostgreSQL 16 con volumen persistente.
+  # Los datos sobreviven a `docker compose down` gracias al volume.
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: pulse
+      POSTGRES_PASSWORD: pulse
+      POSTGRES_DB: pulse
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulse"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ---- Backend API ----
+  # Express + TypeScript en puerto 3001.
+  # Espera a que Postgres este listo (depends_on con condition).
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://pulse:pulse@postgres:5432/pulse
+      PORT: "3001"
+      FRONTEND_URL: http://localhost:3000
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---- Frontend ----
+  # Next.js 16 en puerto 3000.
+  # NEXT_PUBLIC_API_URL es la URL que el NAVEGADOR usa para hablar con el backend.
+  # Como el navegador no esta dentro de Docker, usa localhost:3001 (no "backend:3001").
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:

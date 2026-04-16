@@ -1,0 +1,336 @@
+{
+  "info": {
+    "name": "Pulse API",
+    "description": "API del dashboard Pulse — monitorización de red de asesorías (Asevia)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Verifica que el backend está corriendo. Devuelve `{\"status\": \"ok\"}`."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Asesorías",
+      "item": [
+        {
+          "name": "Listar asesorías (sin filtros)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias"]
+            },
+            "description": "Devuelve las primeras 20 asesorías ordenadas por nombre."
+          }
+        },
+        {
+          "name": "Listar asesorías (con paginación)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número de página (default: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Resultados por página (default: 20, max: 100)"
+                }
+              ]
+            },
+            "description": "Devuelve asesorías con paginación. La respuesta incluye `pagination: { page, limit, total, totalPages }`."
+          }
+        },
+        {
+          "name": "Listar asesorías (búsqueda por texto)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias?search=madrid",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "madrid",
+                  "description": "Búsqueda parcial case-insensitive en nombre y ciudad"
+                }
+              ]
+            },
+            "description": "Busca asesorías cuyo nombre o ciudad contenga el texto. Case-insensitive (ILIKE)."
+          }
+        },
+        {
+          "name": "Listar asesorías (filtro por provincia)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias?provincia=Madrid",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias"],
+              "query": [
+                {
+                  "key": "provincia",
+                  "value": "Madrid",
+                  "description": "Filtro exacto por provincia"
+                }
+              ]
+            },
+            "description": "Filtra asesorías por provincia (match exacto)."
+          }
+        },
+        {
+          "name": "Listar asesorías (filtro por especialidad)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias?especialidad=Fiscal",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias"],
+              "query": [
+                {
+                  "key": "especialidad",
+                  "value": "Fiscal",
+                  "description": "Filtro por especialidad. Valores: Fiscal, Contable, Laboral"
+                }
+              ]
+            },
+            "description": "Filtra asesorías por especialidad (enum: Fiscal, Contable, Laboral)."
+          }
+        },
+        {
+          "name": "Listar asesorías (filtros combinados)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias?search=ases&provincia=Madrid&especialidad=Fiscal&page=1&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "ases",
+                  "description": "Búsqueda parcial en nombre/ciudad"
+                },
+                {
+                  "key": "provincia",
+                  "value": "Madrid",
+                  "description": "Filtro exacto por provincia"
+                },
+                {
+                  "key": "especialidad",
+                  "value": "Fiscal",
+                  "description": "Filtro por especialidad (Fiscal, Contable, Laboral)"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número de página"
+                },
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "description": "Resultados por página"
+                }
+              ]
+            },
+            "description": "Todos los filtros combinados con AND. Búsqueda + provincia + especialidad + paginación."
+          }
+        },
+        {
+          "name": "Detalle de asesoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias", "1"]
+            },
+            "description": "Devuelve todos los campos de una asesoría por ID. Devuelve 404 si no existe, 400 si el ID no es numérico."
+          }
+        },
+        {
+          "name": "Detalle de asesoría (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias/99999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias", "99999"]
+            },
+            "description": "Ejemplo de respuesta 404 para un ID que no existe."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Métricas por Asesoría",
+      "item": [
+        {
+          "name": "Métricas de una asesoría (todas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias/1/metricas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias", "1", "metricas"]
+            },
+            "description": "Devuelve todas las métricas mensuales de la asesoría, ordenadas por periodo ascendente. Incluye los 16 campos raw + 3 campos computed (declaraciones_total, facturacion_total, tasa_resolucion)."
+          }
+        },
+        {
+          "name": "Métricas de una asesoría (rango de fechas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias/1/metricas?from=2025-06&to=2025-09",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias", "1", "metricas"],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2025-06",
+                  "description": "Desde este mes (inclusive). Formato: YYYY-MM"
+                },
+                {
+                  "key": "to",
+                  "value": "2025-09",
+                  "description": "Hasta este mes (inclusive). Formato: YYYY-MM"
+                }
+              ]
+            },
+            "description": "Filtra métricas por rango de fechas. Ambos parámetros son opcionales — se pueden usar solos o combinados."
+          }
+        },
+        {
+          "name": "Métricas de una asesoría (solo from)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias/1/metricas?from=2025-10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias", "1", "metricas"],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2025-10",
+                  "description": "Desde octubre 2025 en adelante"
+                }
+              ]
+            },
+            "description": "Solo con parámetro from — devuelve desde octubre 2025 hasta el último mes disponible."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Red (Métricas Agregadas)",
+      "item": [
+        {
+          "name": "Métricas agregadas de red (todas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/red/metricas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "red", "metricas"]
+            },
+            "description": "Devuelve métricas agregadas de TODA la red por mes: SUM(clientes_activos), SUM(facturacion_total), AVG ponderado(satisfaccion_cliente), AVG(tasa_resolucion), SUM(declaraciones_total). Incluye ranking top/bottom 5 asesorías por crecimiento de facturación."
+          }
+        },
+        {
+          "name": "Métricas agregadas de red (rango de fechas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/red/metricas?from=2025-04&to=2025-09",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "red", "metricas"],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "2025-04",
+                  "description": "Desde este mes (inclusive). Formato: YYYY-MM"
+                },
+                {
+                  "key": "to",
+                  "value": "2025-09",
+                  "description": "Hasta este mes (inclusive). Formato: YYYY-MM"
+                }
+              ]
+            },
+            "description": "Métricas agregadas filtradas por rango de fechas."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Soporte RAG (Fase 2)",
+      "item": [
+        {
+          "name": "Pregunta sobre una asesoría",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pregunta\": \"¿Qué incidencias recurrentes tiene esta asesoría?\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/asesorias/1/soporte/query",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "asesorias", "1", "soporte", "query"]
+            },
+            "description": "Hace una pregunta sobre los documentos de soporte de una asesoría específica. Usa RAG (búsqueda semántica + LLM) para responder citando fuentes.\n\nRequest body:\n- `pregunta` (string, required): La pregunta en lenguaje natural\n\nResponse:\n- `respuesta` (string): Respuesta generada por el LLM\n- `fuentes` (array): Documentos citados con doc_id, tipo, fecha, titulo\n\nEl sistema SOLO responde con información de la asesoría especificada (aislamiento multitenancy).\n\nRequiere OPENAI_API_KEY en el .env del backend. Sin ella, devuelve 503."
+          }
+        }
+      ]
+    }
+  ]
+}

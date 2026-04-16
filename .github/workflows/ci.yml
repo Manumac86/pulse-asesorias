@@ -1,0 +1,141 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancela ejecuciones anteriores del mismo PR si hay un push nuevo.
+# Evita desperdiciar minutos de CI en commits que ya fueron reemplazados.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: |
+            backend/pnpm-lock.yaml
+            frontend/pnpm-lock.yaml
+
+      # Backend lint
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        working-directory: backend
+        run: DATABASE_URL="postgresql://x:x@localhost:5432/x" pnpm exec prisma generate
+
+      - name: Lint backend
+        working-directory: backend
+        run: pnpm run build
+
+      # Frontend lint
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: pnpm run lint
+
+      # Prettier check (ambos)
+      - name: Install root dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: .
+
+      - name: Check formatting
+        run: pnpm run format:check
+        working-directory: .
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: pulse
+          POSTGRES_PASSWORD: pulse
+          POSTGRES_DB: pulse
+        ports:
+          - 5432:5432
+        # Health check: el job no empieza hasta que Postgres responda.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: |
+            backend/pnpm-lock.yaml
+            frontend/pnpm-lock.yaml
+
+      # Backend tests (con BD real)
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        working-directory: backend
+        run: DATABASE_URL="postgresql://pulse:pulse@localhost:5432/pulse" pnpm exec prisma generate
+
+      - name: Run migrations
+        working-directory: backend
+        run: DATABASE_URL="postgresql://pulse:pulse@localhost:5432/pulse" pnpm exec prisma migrate deploy
+
+      - name: Seed database
+        working-directory: backend
+        run: DATABASE_URL="postgresql://pulse:pulse@localhost:5432/pulse" pnpm exec tsx prisma/seed.ts
+
+      - name: Run backend tests
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://pulse:pulse@localhost:5432/pulse
+        run: pnpm test
+
+      # Frontend tests (sin BD, tests puros)
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Run frontend tests
+        working-directory: frontend
+        run: pnpm test
+
+  build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t pulse-backend ./backend
+
+      - name: Build frontend image
+        run: docker build -t pulse-frontend ./frontend

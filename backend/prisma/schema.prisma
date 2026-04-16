@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// ENUM: Especialidad
+// ---------------------------------------------------------------------------
+// Prisma genera un tipo TS: Especialidad.Fiscal | Especialidad.Contable | ...
+// A nivel de BD, crea un enum PostgreSQL. Esto significa que si alguien
+// intenta insertar "FISCAL" o "fiscal" (sin el case correcto), Postgres
+// rechaza la insercion. Validacion a nivel de BD, no solo de aplicacion.
+
+enum Especialidad {
+  Fiscal
+  Contable
+  Laboral
+}
+
+// ---------------------------------------------------------------------------
+// MODEL: Asesoria
+// ---------------------------------------------------------------------------
+// Cada asesoria de la red. Los datos vienen de asesorias_seed.csv.
+//
+// Convenciones:
+// - El modelo usa camelCase (TS): fechaAlta, numEmpleados
+// - La tabla y columnas usan snake_case (SQL): fecha_alta, num_empleados
+// - @map("nombre_sql") conecta ambos mundos
+// - @@map("nombre_tabla") renombra la tabla
+
+model Asesoria {
+  id           Int           @id @default(autoincrement())
+  nombre       String
+  cif          String        @unique
+  provincia    String
+  ciudad       String
+  fechaAlta    DateTime      @map("fecha_alta")
+  numEmpleados Int           @map("num_empleados")
+  especialidad Especialidad
+
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  // Relaciones 1:N
+  metricas     MetricaMensual[]
+  documentos   DocumentoSoporte[]
+
+  @@map("asesorias")
+}
+
+// ---------------------------------------------------------------------------
+// MODEL: MetricaMensual
+// ---------------------------------------------------------------------------
+// Una fila por asesoria por mes. Los datos vienen de metricas_seed.csv.
+//
+// Campos marcados con "COMPUTED" no existen en el CSV — se calculan en el seed:
+// - declaracionesTotal = renta + iva + sociedades + otros
+// - facturacionTotal = asesoria + gestion + consultoria
+// - tasaResolucion = consultasResueltas / consultasRecibidas (null si 0)
+
+model MetricaMensual {
+  id                        Int       @id @default(autoincrement())
+
+  // FK a la asesoria
+  asesoriaId                Int       @map("asesoria_id")
+  asesoria                  Asesoria  @relation(fields: [asesoriaId], references: [id])
+
+  // Periodo: primer dia del mes (2025-04-01, 2025-05-01, etc.)
+  periodo                   DateTime
+
+  // --- Clientes ---
+  clientesActivos           Int       @map("clientes_activos")
+  clientesNuevos            Int       @map("clientes_nuevos")
+  clientesBaja              Int       @map("clientes_baja")
+
+  // --- Declaraciones ---
+  declaracionesRenta        Int       @map("declaraciones_renta")
+  declaracionesIva          Int       @map("declaraciones_iva")
+  declaracionesSociedades   Int       @map("declaraciones_sociedades")
+  declaracionesOtros        Int       @map("declaraciones_otros")
+  declaracionesTotal        Int       @map("declaraciones_total")         // COMPUTED
+
+  // --- Facturacion (en euros, con decimales) ---
+  facturacionAsesoriaEur    Float     @map("facturacion_asesoria_eur")
+  facturacionGestionEur     Float     @map("facturacion_gestion_eur")
+  facturacionConsultoriaEur Float     @map("facturacion_consultoria_eur")
+  facturacionTotal          Float     @map("facturacion_total")           // COMPUTED
+
+  // --- Operativa ---
+  horasTrabajadas           Int       @map("horas_trabajadas")
+  consultasRecibidas        Int       @map("consultas_recibidas")
+  consultasResueltas        Int       @map("consultas_resueltas")
+  tasaResolucion            Float?    @map("tasa_resolucion")             // COMPUTED, nullable
+
+  // --- Calidad ---
+  incidenciasAeat           Int       @map("incidencias_aeat")
+  documentosProcesados      Int       @map("documentos_procesados")
+  satisfaccionCliente       Float     @map("satisfaccion_cliente")
+
+  // Constraint: no puede haber dos filas para la misma asesoria en el mismo mes
+  @@unique([asesoriaId, periodo])
+
+  // Indice para queries frecuentes: "dame las metricas de la asesoria X"
+  @@index([asesoriaId])
+
+  @@map("metricas_mensuales")
+}
+
+// ---------------------------------------------------------------------------
+// MODEL: DocumentoSoporte (Fase 2)
+// ---------------------------------------------------------------------------
+// Documentos de soporte de cada asesoria: tickets, chats, emails, notas internas.
+// Datos de soporte_seed.jsonl. Cada documento tiene un embedding vectorial
+// para busqueda semantica.
+//
+// NOTA: El campo `embedding` (vector 1536) se crea en SQL manual porque
+// Prisma no soporta pgvector nativamente. Ver migracion add_soporte.
+
+model DocumentoSoporte {
+  id          Int       @id @default(autoincrement())
+  docId       String    @unique @map("doc_id")
+  asesoriaId  Int       @map("asesoria_id")
+  asesoria    Asesoria  @relation(fields: [asesoriaId], references: [id])
+  fecha       DateTime
+  tipo        String    // chat, nota_interna, ticket, email
+  categoria   String    // Onboarding, Cobros, Renta, Certificado, IVA, Laboral
+  prioridad   String    // alta, media, baja
+  estado      String    // resuelto, abierto, en_seguimiento
+  titulo      String
+  texto       String
+  tags        String[]
+
+  // embedding vector(1536) — creado en SQL manual, no en Prisma
+  // Se usa para busqueda semantica con pgvector
+
+  @@index([asesoriaId])
+  @@map("documentos_soporte")
+}
